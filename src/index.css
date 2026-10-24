@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/*  Design tokens                                                      */
+/*  Latin: Cormorant Garamond (display) + Instrument Sans (text)       */
+/*  Arabic: Amiri (display) + IBM Plex Sans Arabic (text)              */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  --font-display: 'Cormorant Garamond', 'Amiri', Georgia, serif;
+  --font-sans: 'Instrument Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-display-ar: 'Amiri', 'Cormorant Garamond', serif;
+  --font-sans-ar: 'IBM Plex Sans Arabic', 'Instrument Sans', system-ui, sans-serif;
+
+  --color-gold: #b08d57;
+  --color-gold-2: #d4b27a;
+  --color-gold-3: #8a6b3c;
+
+  --color-bg: var(--t-bg);
+  --color-bg-2: var(--t-bg-2);
+  --color-bg-3: var(--t-bg-3);
+  --color-fg: var(--t-fg);
+  --color-fg-2: var(--t-fg-2);
+  --color-fg-3: var(--t-fg-3);
+  --color-line: var(--t-line);
+  --color-accent: var(--t-accent);
+  --color-accent-fg: var(--t-accent-fg);
+
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+  --animate-fade: fade 0.6s ease both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+}
+
+/* Themes — set on <html data-theme="…"> for the public menu, on a wrapper for staff. */
+:root, [data-theme='midnight'] {
+  --t-bg: #0b0a09;
+  --t-bg-2: #141210;
+  --t-bg-3: #1d1a17;
+  --t-fg: #f3ede3;
+  --t-fg-2: #b9b0a3;
+  --t-fg-3: #7d7569;
+  --t-line: rgba(243, 237, 227, 0.1);
+  --t-accent: #d4b27a;
+  --t-accent-fg: #0b0a09;
+  color-scheme: dark;
+}
+[data-theme='ivory'] {
+  --t-bg: #f7f3ec;
+  --t-bg-2: #ffffff;
+  --t-bg-3: #efe8dc;
+  --t-fg: #1d1a16;
+  --t-fg-2: #5c554b;
+  --t-fg-3: #948b7d;
+  --t-line: rgba(29, 26, 22, 0.1);
+  --t-accent: #8a6b3c;
+  --t-accent-fg: #ffffff;
+  color-scheme: light;
+}
+[data-theme='olive'] {
+  --t-bg: #0f1511;
+  --t-bg-2: #161d18;
+  --t-bg-3: #1f2a22;
+  --t-fg: #eef1e8;
+  --t-fg-2: #b2bba9;
+  --t-fg-3: #76826f;
+  --t-line: rgba(238, 241, 232, 0.1);
+  --t-accent: #c9b57a;
+  --t-accent-fg: #0f1511;
+  color-scheme: dark;
+}
+[data-theme='blush'] {
+  --t-bg: #f8efec;
+  --t-bg-2: #fffaf8;
+  --t-bg-3: #f0dfd9;
+  --t-fg: #2a1b18;
+  --t-fg-2: #6d5551;
+  --t-fg-3: #a48b86;
+  --t-line: rgba(42, 27, 24, 0.1);
+  --t-accent: #9a5c4a;
+  --t-accent-fg: #ffffff;
+  color-scheme: light;
+}
+/* Staff console theme: calm, bright, utilitarian */
+[data-theme='console'] {
+  --t-bg: #f4f2ee;
+  --t-bg-2: #ffffff;
+  --t-bg-3: #ebe7df;
+  --t-fg: #1b1915;
+  --t-fg-2: #5b574f;
+  --t-fg-3: #918b80;
+  --t-line: rgba(27, 25, 21, 0.09);
+  --t-accent: #1b1915;
+  --t-accent-fg: #ffffff;
+  color-scheme: light;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--t-bg);
+  color: var(--t-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+[dir='rtl'] body, [dir='rtl'] .font-sans { font-family: var(--font-sans-ar); }
+[dir='rtl'] .font-display { font-family: var(--font-display-ar); }
+.font-display { font-family: var(--font-display); font-variant-numeric: lining-nums; }
+
+/* Arabic display type sits lower; nudge metrics */
+[dir='rtl'] .font-display { line-height: 1.25; }
+
+::selection { background: var(--t-accent); color: var(--t-accent-fg); }
+
+/* Grain overlay for atmosphere (public menu only) */
+.grain::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 60;
+  opacity: 0.07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hairline rule with a gold center dot */
+.rule {
+  display: flex; align-items: center; gap: 0.75rem; color: var(--t-fg-3);
+}
+.rule::before, .rule::after { content: ''; flex: 1; height: 1px; background: var(--t-line); }
+
+/* Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--t-bg-3) 25%, var(--t-bg-2) 50%, var(--t-bg-3) 75%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Hide scrollbars on horizontal stages but keep them scrollable */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Snap stage */
+.stage { scroll-snap-type: x mandatory; }
+.stage > * { scroll-snap-align: center; }
+
+/* Focus ring that respects theme */
+:focus-visible { outline: 2px solid var(--t-accent); outline-offset: 2px; border-radius: 4px; }
+
+/* Inputs */
+.input {
+  width: 100%; border-radius: 0.75rem; border: 1px solid var(--t-line);
+  background: var(--t-bg-2); color: var(--t-fg); padding: 0.7rem 0.9rem; font-size: 0.95rem;
+  transition: border-color 0.15s;
+}
+.input:focus { outline: none; border-color: var(--t-accent); }
+.input::placeholder { color: var(--t-fg-3); }
+textarea.input { min-height: 5.5rem; resize: vertical; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

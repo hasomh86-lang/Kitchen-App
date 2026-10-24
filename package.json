@@ -1,0 +1,41 @@
+{
+  "name": "artisan-kitchen",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n web,api -c cyan,yellow \"vite\" \"wrangler dev --port 8787\"",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "deploy": "npm run build && wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply artisan-kitchen --local",
+    "db:migrate": "wrangler d1 migrations apply artisan-kitchen --remote",
+    "db:seed:local": "wrangler d1 execute artisan-kitchen --local --file=./seed/seed.sql",
+    "db:seed": "wrangler d1 execute artisan-kitchen --remote --file=./seed/seed.sql",
+    "import": "node scripts/import-supabase.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/amiri": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@fontsource/instrument-sans": "^5.3.0",
+    "@tanstack/react-query": "^5.62.0",
+    "hono": "^4.6.14",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "wouter": "^3.3.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250110.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "wrangler": "^4.152.0"
+  }
+}
