@@ -2,10 +2,9 @@ import type { SessionUser } from '@shared/types';
 
 export interface Env {
   DB: D1Database;
-  IMAGES: R2Bucket;
+  IMAGES: KVNamespace;
   ASSETS: Fetcher;
   APP_NAME: string;
-  PUBLIC_ORIGIN: string;
   SESSION_SECRET?: string;
   GEMINI_API_KEY?: string;
 }

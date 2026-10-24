@@ -7,6 +7,7 @@ import { ArrowStart, Globe, Key, Monogram, Search, Wifi } from '@/components/ico
 import { cx } from '@/components/ui';
 import { DishDetail } from './DishDetail';
 import { CoreRow, Disclaimer, Img, NutritionRow, Tags, useReveal } from './parts';
+import { LimitFilters, ThemePicker, ViewToggle, guestTheme, hasLimits, matchesLimits, useViewMode, type Limits, type ViewMode } from './controls';
 
 type GateState =
   | { kind: 'loading' }
@@ -24,8 +25,16 @@ export default function PublicMenu({ slug }: { slug: string }) {
   const seenDisclaimer = useRef(new Set<string>());
   const [toast, setToast] = useState<string | null>(null);
   const langTouched = useRef(false);
+  const [limits, setLimits] = useState<Limits>({});
+  const [view, setView] = useViewMode();
+  const [themeOpen, setThemeOpen] = useState(false);
+  const [themeOverride, setThemeOverride] = useState<ThemeId | null>(() => guestTheme.get());
 
-  const applyTheme = (theme: ThemeId) => { document.documentElement.dataset.theme = theme; };
+  const applyTheme = useCallback((theme: ThemeId) => { document.documentElement.dataset.theme = guestTheme.get() ?? theme; }, []);
+  const pickTheme = (t: ThemeId | null, menuDefault: ThemeId) => {
+    guestTheme.set(t); setThemeOverride(t);
+    document.documentElement.dataset.theme = t ?? menuDefault;
+  };
 
   const load = useCallback(async () => {
     const token = deviceToken.get(slug);
@@ -49,7 +58,7 @@ export default function PublicMenu({ slug }: { slug: string }) {
       if (cached) { applyTheme(cached.menu.settings.theme); setState({ kind: 'ready', bundle: cached, offline: true }); }
       else setState({ kind: 'locked', error: t('common.error') });
     }
-  }, [slug, setLang, t]);
+  }, [slug, setLang, t, applyTheme]);
 
   useEffect(() => { void load(); }, [load]);
 
@@ -71,12 +80,17 @@ export default function PublicMenu({ slug }: { slug: string }) {
   }, [bundle]);
 
   const q = query.trim().toLowerCase();
+  const filtering = hasLimits(limits);
+  // Search text + nutrition limits together. Null means "no filtering active".
   const searchResults = useMemo(() => {
-    if (!q || !bundle) return null;
-    return bundle.dishes.filter((d) =>
-      [d.name.en, d.name.ar, d.description.en, d.description.ar, ...d.ingredients.flatMap((i) => [i.en, i.ar]), ...d.tags.flatMap((x) => [x.label.en, x.label.ar])]
-        .some((s) => s?.toLowerCase().includes(q)));
-  }, [q, bundle]);
+    if ((!q && !filtering) || !bundle) return null;
+    return bundle.dishes.filter((d) => {
+      if (!matchesLimits(d, limits)) return false;
+      if (!q) return true;
+      return [d.name.en, d.name.ar, d.description.en, d.description.ar, ...d.ingredients.flatMap((i) => [i.en, i.ar]), ...d.tags.flatMap((x) => [x.label.en, x.label.ar])]
+        .some((s) => s?.toLowerCase().includes(q));
+    });
+  }, [q, filtering, limits, bundle]);
 
   const openCategory = (c: Category) => {
     setCatId(c.id);
@@ -111,6 +125,12 @@ export default function PublicMenu({ slug }: { slug: string }) {
           <button onClick={() => { langTouched.current = true; toggle(); }} className="flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-xs font-medium text-fg-2 hover:border-accent hover:text-fg">
             <Globe size={14} />{lang === 'ar' ? 'EN' : 'عربي'}
           </button>
+          <div className="relative">
+            <button aria-label={t('menu.theme')} onClick={() => setThemeOpen((v) => !v)} className={cx('flex h-9 w-9 items-center justify-center rounded-full border transition', themeOpen ? 'border-accent text-accent' : 'border-line text-fg-2 hover:border-accent hover:text-fg')}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 3a9 9 0 1 0 0 18c1.7 0 2-1 2-2 0-1-.6-1.6-.6-2.4 0-1 .8-1.6 1.8-1.6H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8Z" /><circle cx="7.5" cy="11.5" r="1" fill="currentColor" /><circle cx="10.5" cy="7.5" r="1" fill="currentColor" /><circle cx="15.5" cy="7.5" r="1" fill="currentColor" /></svg>
+            </button>
+            {themeOpen && <ThemePicker current={themeOverride ?? s.theme} menuDefault={s.theme} onPick={(th) => pickTheme(th, s.theme)} onClose={() => setThemeOpen(false)} />}
+          </div>
         </div>
       </header>
 
@@ -130,12 +150,31 @@ export default function PublicMenu({ slug }: { slug: string }) {
 
             <SearchBar value={query} onChange={setQuery} />
 
+            {/* Quick jump to a menu */}
+            <div className="mt-8 animate-rise" style={{ animationDelay: '260ms' }}>
+              <div className="rule mb-4 text-[10px] uppercase tracking-[0.3em]"><span>{t('menu.quick')}</span></div>
+              <div className="flex flex-wrap justify-center gap-2">
+                {categories.map((c) => (
+                  <button key={c.id} onClick={() => openCategory(c)} className="rounded-full border border-line bg-bg-2/60 px-4 py-2 text-[11px] uppercase tracking-[0.14em] text-fg-2 transition hover:border-accent hover:text-fg">{l(c.name)}</button>
+                ))}
+              </div>
+            </div>
+
+            {s.showNutrition && <LimitFilters value={limits} onChange={setLimits} className="mt-10" />}
+
             {searchResults ? (
-              <SearchGrid results={searchResults} onOpen={setOpen} showNutrition={s.showNutrition} />
+              <>
+                <div className="mt-12 flex items-center justify-between gap-4">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-fg-3">{searchResults.length} {t('menu.dishes')}</div>
+                  <ViewToggle value={view} onChange={setView} />
+                </div>
+                <SearchGrid results={searchResults} onOpen={setOpen} showNutrition={s.showNutrition} view={view} />
+              </>
             ) : (
               <>
                 <div className="rule mt-14 mb-8 text-[10px] uppercase tracking-[0.3em]"><span>{t('menu.choose')}</span></div>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <CategoryStrip categories={categories} counts={dishesByCat} onOpen={openCategory} />
+                <div className="grid gap-6 sm:grid-cols-2 lg:hidden">
                   {categories.map((c, i) => (
                     <CategoryCard key={c.id} c={c} i={i} count={dishesByCat.get(c.id)?.length ?? 0} onOpen={() => openCategory(c)} />
                   ))}
@@ -155,6 +194,8 @@ export default function PublicMenu({ slug }: { slug: string }) {
             index={categories.findIndex((x) => x.id === current.id)}
             dishes={(searchResults ?? dishesByCat.get(current.id) ?? []).filter((d) => !searchResults || d.categoryId === current.id)}
             query={query} onQuery={setQuery}
+            limits={limits} onLimits={setLimits}
+            view={view} onView={setView}
             onBack={() => { setCatId(null); setQuery(''); }}
             onOpen={setOpen}
             showNutrition={s.showNutrition} showCore={s.showCoreComponents}
@@ -226,21 +267,83 @@ function CategoryCard({ c, i, count, onOpen }: { c: Category; i: number; count: 
   );
 }
 
-function SearchGrid({ results, onOpen, showNutrition }: { results: Dish[]; onOpen: (d: Dish) => void; showNutrition: boolean }) {
-  const { t } = useI18n();
-  if (!results.length) return <p className="mt-12 text-center text-sm text-fg-3">{t('menu.noResults')}</p>;
+/**
+ * Desktop-only expanding strip: every category is a tall panel; the active one
+ * widens and shows its copy, the others collapse to a vertical title. Hover or
+ * focus previews, click opens. Mirrors the interaction guests liked on v1.
+ */
+function CategoryStrip({ categories, counts, onOpen }: { categories: Category[]; counts: Map<string, Dish[]>; onOpen: (c: Category) => void }) {
+  const { l, t } = useI18n();
+  const [active, setActive] = useState(0);
+  const { ref, shown } = useReveal<HTMLDivElement>();
+  if (categories.length < 2) return null;
   return (
-    <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {results.map((d, i) => <DishCard key={d.id} d={d} i={i} onOpen={() => onOpen(d)} showNutrition={showNutrition} showCore={false} />)}
+    <div ref={ref} className={cx('hidden h-[520px] gap-3 lg:flex transition duration-700', shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
+      {categories.map((c, i) => {
+        const on = i === active;
+        return (
+          <button key={c.id} onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => (on ? onOpen(c) : setActive(i))}
+            className={cx('group relative overflow-hidden rounded-[1.75rem] border text-start transition-[flex,border-color] duration-700 ease-out-expo', on ? 'border-accent/40' : 'border-line hover:border-fg-3/40')}
+            style={{ flex: on ? '4 1 0%' : '1 1 0%', transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)' }}>
+            <Img src={c.image} alt="" className={cx('absolute inset-0 h-full w-full transition duration-[1400ms]', on ? 'scale-100 opacity-100' : 'scale-110 opacity-40 saturate-50')} />
+            <div className={cx('absolute inset-0 transition duration-700', on ? 'bg-gradient-to-t from-black/85 via-black/30 to-black/10' : 'bg-black/55')} />
+            {/* Number */}
+            <div className="absolute start-5 top-5 font-display text-sm tracking-[0.3em] text-white/70">{String(i + 1).padStart(2, '0')}</div>
+            {/* Collapsed vertical title */}
+            <div className={cx('absolute inset-0 flex items-end justify-center pb-8 transition duration-500', on ? 'opacity-0' : 'opacity-100 delay-200')}>
+              <span className="font-display text-2xl text-white [writing-mode:vertical-rl] rotate-180 whitespace-nowrap">{l(c.name)}</span>
+            </div>
+            {/* Expanded copy */}
+            <div className={cx('absolute inset-x-0 bottom-0 p-8 transition duration-500', on ? 'translate-y-0 opacity-100 delay-200' : 'translate-y-4 opacity-0')}>
+              <div className="text-[10px] uppercase tracking-[0.3em] text-gold-2">{t('menu.eyebrow')} · {counts.get(c.id)?.length ?? 0} {t('menu.dishes')}</div>
+              <h3 className="mt-2 font-display text-5xl leading-none text-white">{l(c.name)}</h3>
+              {l(c.description) && <p className="mt-3 max-w-md text-sm leading-relaxed text-white/75">{l(c.description)}</p>}
+              <span className="mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-gold-2 px-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-black transition group-hover:bg-white">
+                {t('menu.explore')} <ArrowStart size={14} className="rotate-180" />
+              </span>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-function CategoryView({ c, index, dishes, query, onQuery, onBack, onOpen, showNutrition, showCore, siblings, onSwitch }: {
-  c: Category; index: number; dishes: Dish[]; query: string; onQuery: (q: string) => void; onBack: () => void; onOpen: (d: Dish) => void;
+function DishGrid({ dishes, onOpen, showNutrition, showCore, view }: { dishes: Dish[]; onOpen: (d: Dish) => void; showNutrition: boolean; showCore: boolean; view: ViewMode }) {
+  if (view === 'list') {
+    return (
+      <div className="divide-y divide-line rounded-2xl border border-line bg-bg-2/50">
+        {dishes.map((d, i) => <DishRow key={d.id} d={d} i={i} onOpen={() => onOpen(d)} showNutrition={showNutrition} />)}
+      </div>
+    );
+  }
+  if (view === 'compact') {
+    return (
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {dishes.map((d, i) => <DishTile key={d.id} d={d} i={i} onOpen={() => onOpen(d)} showNutrition={showNutrition} />)}
+      </div>
+    );
+  }
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      {dishes.map((d, i) => <DishCard key={d.id} d={d} i={i} onOpen={() => onOpen(d)} showNutrition={showNutrition} showCore={showCore} />)}
+    </div>
+  );
+}
+
+function SearchGrid({ results, onOpen, showNutrition, view }: { results: Dish[]; onOpen: (d: Dish) => void; showNutrition: boolean; view: ViewMode }) {
+  const { t } = useI18n();
+  if (!results.length) return <p className="mt-12 text-center text-sm text-fg-3">{t('menu.noResults')}</p>;
+  return <div className="mt-6"><DishGrid dishes={results} onOpen={onOpen} showNutrition={showNutrition} showCore={false} view={view} /></div>;
+}
+
+function CategoryView({ c, index, dishes, query, onQuery, limits, onLimits, view, onView, onBack, onOpen, showNutrition, showCore, siblings, onSwitch }: {
+  c: Category; index: number; dishes: Dish[]; query: string; onQuery: (q: string) => void; limits: Limits; onLimits: (l: Limits) => void;
+  view: ViewMode; onView: (v: ViewMode) => void; onBack: () => void; onOpen: (d: Dish) => void;
   showNutrition: boolean; showCore: boolean; siblings: Category[]; onSwitch: (c: Category) => void;
 }) {
   const { l, t } = useI18n();
+  const [filtersOpen, setFiltersOpen] = useState(hasLimits(limits));
   return (
     <div className="animate-fade">
       <div className="flex flex-wrap items-end justify-between gap-6 pb-8 pt-8 md:pt-14">
@@ -253,21 +356,74 @@ function CategoryView({ c, index, dishes, query, onQuery, onBack, onOpen, showNu
         <div className="w-full md:w-80"><SearchBar value={query} onChange={onQuery} /></div>
       </div>
 
-      {/* Category switcher */}
-      <div className="mb-8 flex gap-2 overflow-x-auto no-scrollbar">
-        {siblings.map((s) => (
-          <button key={s.id} onClick={() => s.id !== c.id && onSwitch(s)} className={cx('shrink-0 rounded-full border px-4 py-2 text-xs transition', s.id === c.id ? 'border-accent bg-accent text-accent-fg' : 'border-line text-fg-2 hover:border-fg-3')}>{l(s.name)}</button>
-        ))}
+      {/* Category switcher + view controls */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+          {siblings.map((s) => (
+            <button key={s.id} onClick={() => s.id !== c.id && onSwitch(s)} className={cx('shrink-0 rounded-full border px-4 py-2 text-xs transition', s.id === c.id ? 'border-accent bg-accent text-accent-fg' : 'border-line text-fg-2 hover:border-fg-3')}>{l(s.name)}</button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          {showNutrition && (
+            <button onClick={() => setFiltersOpen((v) => !v)} className={cx('h-10 rounded-full border px-4 text-[11px] uppercase tracking-[0.18em] transition', filtersOpen || hasLimits(limits) ? 'border-accent text-accent' : 'border-line text-fg-2 hover:border-fg-3')}>
+              {t('menu.filters')}{hasLimits(limits) ? ' •' : ''}
+            </button>
+          )}
+          <ViewToggle value={view} onChange={onView} />
+        </div>
       </div>
+      {showNutrition && filtersOpen && <LimitFilters value={limits} onChange={onLimits} className="mb-10 rounded-2xl border border-line bg-bg-2/50 p-5" />}
 
       {dishes.length === 0 ? (
         <p className="py-16 text-center text-sm text-fg-3">{t('menu.noResults')}</p>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {dishes.map((d, i) => <DishCard key={d.id} d={d} i={i} onOpen={() => onOpen(d)} showNutrition={showNutrition} showCore={showCore} />)}
-        </div>
+        <DishGrid dishes={dishes} onOpen={onOpen} showNutrition={showNutrition} showCore={showCore} view={view} />
       )}
     </div>
+  );
+}
+
+/* Compact tile: photo-first, name + kcal only. */
+function DishTile({ d, i, onOpen, showNutrition }: { d: Dish; i: number; onOpen: () => void; showNutrition: boolean }) {
+  const { l, t } = useI18n();
+  const { ref, shown } = useReveal<HTMLButtonElement>();
+  return (
+    <button ref={ref} onClick={onOpen} className={cx('group relative overflow-hidden rounded-2xl border border-line bg-bg-2 text-start transition duration-700', shown ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0')} style={{ transitionDelay: `${(i % 5) * 60}ms` }}>
+      <div className="relative aspect-square overflow-hidden bg-white">
+        <Img src={d.image} alt={l(d.name)} className="h-full w-full transition duration-[1200ms] group-hover:scale-[1.04]" />
+        <div className="absolute start-2.5 top-2.5 rounded-full bg-black/35 px-2 py-0.5 font-display text-[11px] text-white backdrop-blur">{String(i + 1).padStart(2, '0')}</div>
+        {d.isFeatured && <div className="absolute end-2.5 top-2.5 rounded-full bg-accent px-1.5 py-0.5 text-[9px] text-accent-fg">★</div>}
+      </div>
+      <div className="p-3">
+        <div className="line-clamp-2 font-display text-base leading-tight">{l(d.name)}</div>
+        {showNutrition && <div className="mt-1 text-[10px] uppercase tracking-[0.15em] text-fg-3"><span className="text-accent">{Math.round(d.nutrition.calories)}</span> {t('menu.kcal')}</div>}
+      </div>
+    </button>
+  );
+}
+
+/* List row: thumbnail, name, one-line macros with a dotted leader. */
+function DishRow({ d, i, onOpen, showNutrition }: { d: Dish; i: number; onOpen: () => void; showNutrition: boolean }) {
+  const { l, t } = useI18n();
+  const n = d.nutrition;
+  return (
+    <button onClick={onOpen} className="group flex w-full items-center gap-4 px-4 py-4 text-start transition hover:bg-bg-3/60 sm:gap-6 sm:px-6">
+      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white sm:h-20 sm:w-20"><Img src={d.image} alt="" className="h-full w-full transition duration-700 group-hover:scale-105" /></div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline gap-3">
+          <span className="font-display text-xs text-fg-3">{String(i + 1).padStart(2, '0')}</span>
+          <h3 className="truncate font-display text-xl leading-tight sm:text-2xl">{l(d.name)}</h3>
+          <span className="hidden flex-1 border-b border-dotted border-line sm:block" />
+          <Tags dish={d} className="hidden sm:flex" />
+        </div>
+        {showNutrition && (
+          <div className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-fg-3">
+            <span className="text-accent">{Math.round(n.calories)} {t('menu.kcal')}</span> · {Math.round(n.protein)}{t('menu.g')} {t('menu.protein')} · {Math.round(n.carbohydrates)}{t('menu.g')} {t('menu.carbs')} · {Math.round(n.fat)}{t('menu.g')} {t('menu.fat')}
+          </div>
+        )}
+      </div>
+      <ArrowStart size={16} className="shrink-0 rotate-180 text-fg-3 transition group-hover:text-fg" />
+    </button>
   );
 }
 

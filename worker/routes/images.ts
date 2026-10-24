@@ -3,6 +3,7 @@ import { HTTPException } from 'hono/http-exception';
 import type { AppContext } from '../env';
 import { requireRole } from '../lib/auth';
 import { randomId } from '../lib/crypto';
+import { deleteImage, getImage, putImage } from '../lib/imageStore';
 
 export const images = new Hono<AppContext>();
 
@@ -13,7 +14,7 @@ async function store(c: any, bytes: ArrayBuffer, contentType: string, menuId: st
   if (!ALLOWED.has(contentType)) throw new HTTPException(415, { message: `Unsupported image type ${contentType}` });
   if (bytes.byteLength > MAX_BYTES) throw new HTTPException(413, { message: 'Image is larger than 8 MB' });
   const id = randomId('img');
-  await c.env.IMAGES.put(id, bytes, { httpMetadata: { contentType, cacheControl: 'public, max-age=31536000, immutable' } });
+  await putImage(c.env.IMAGES, id, bytes, contentType);
   await c.env.DB.prepare('INSERT INTO images (id, menu_id, content_type, bytes, created_by) VALUES (?,?,?,?,?)')
     .bind(id, menuId, contentType, bytes.byteLength, c.get('user')?.id ?? null).run();
   return { id, url: `/img/${id}`, bytes: bytes.byteLength, contentType };
@@ -37,7 +38,7 @@ images.post('/data-url', requireRole('admin', 'sub-admin'), async (c) => {
   return c.json(await store(c, bytes.buffer, m[1].toLowerCase(), b.menuId ?? null), 201);
 });
 
-/** Fetch a remote image (e.g. an old Supabase storage URL) into R2. Admin only. */
+/** Fetch a remote image (e.g. an old Supabase storage URL) into storage. Admin only. */
 images.post('/from-url', requireRole('admin'), async (c) => {
   const b = await c.req.json<{ url: string; menuId?: string }>();
   let url: URL;
@@ -51,7 +52,7 @@ images.post('/from-url', requireRole('admin'), async (c) => {
 
 images.delete('/:id', requireRole('admin', 'sub-admin'), async (c) => {
   const id = c.req.param('id');
-  await c.env.IMAGES.delete(id);
+  await deleteImage(c.env.IMAGES, id);
   await c.env.DB.prepare('DELETE FROM images WHERE id = ?').bind(id).run();
   return c.json({ ok: true });
 });
@@ -62,11 +63,11 @@ export async function serveImage(c: any) {
   if (!/^img_[a-z0-9]+$/.test(id)) return c.notFound();
   const etag = `"${id}"`;
   if (c.req.header('if-none-match') === etag) return new Response(null, { status: 304 });
-  const obj = await c.env.IMAGES.get(id);
+  const obj = await getImage(c.env.IMAGES, id);
   if (!obj) return c.notFound();
   const headers = new Headers();
-  obj.writeHttpMetadata(headers);
+  headers.set('content-type', obj.contentType);
   headers.set('etag', etag);
   headers.set('cache-control', 'public, max-age=31536000, immutable');
-  return new Response(obj.body, { headers });
+  return new Response(obj.bytes, { headers });
 }

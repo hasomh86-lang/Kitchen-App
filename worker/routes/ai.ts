@@ -5,6 +5,7 @@ import { HTTPException } from 'hono/http-exception';
 import type { AppContext } from '../env';
 import { requireRole } from '../lib/auth';
 import { randomId } from '../lib/crypto';
+import { getImage, putImage } from '../lib/imageStore';
 import { str } from '../lib/validate';
 
 export const ai = new Hono<AppContext>();
@@ -40,12 +41,12 @@ async function loadImagePart(c: any, ref: string) {
     return { inline_data: { mime_type: m[1], data: m[2] } };
   }
   const id = ref.replace(/^\/img\//, '');
-  const obj = await c.env.IMAGES.get(id);
+  const obj = await getImage(c.env.IMAGES, id);
   if (!obj) throw new HTTPException(404, { message: 'Image not found' });
-  const buf = new Uint8Array(await obj.arrayBuffer());
+  const buf = new Uint8Array(obj.bytes);
   let bin = '';
   for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-  return { inline_data: { mime_type: obj.httpMetadata?.contentType ?? 'image/jpeg', data: btoa(bin) } };
+  return { inline_data: { mime_type: obj.contentType, data: btoa(bin) } };
 }
 
 async function saveGeneratedImage(c: any, part: any, menuId: string | null) {
@@ -53,7 +54,7 @@ async function saveGeneratedImage(c: any, part: any, menuId: string | null) {
   const mime: string = part.inlineData?.mimeType ?? part.inline_data?.mime_type ?? 'image/png';
   const bytes = Uint8Array.from(atob(data), (ch) => ch.charCodeAt(0));
   const id = randomId('img');
-  await c.env.IMAGES.put(id, bytes, { httpMetadata: { contentType: mime, cacheControl: 'public, max-age=31536000, immutable' } });
+  await putImage(c.env.IMAGES, id, bytes, mime);
   await c.env.DB.prepare('INSERT INTO images (id, menu_id, content_type, bytes, created_by) VALUES (?,?,?,?,?)')
     .bind(id, menuId, mime, bytes.byteLength, c.get('user')?.id ?? null).run();
   return `/img/${id}`;

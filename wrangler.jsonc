@@ -13,12 +13,11 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "artisan-kitchen", "database_id": "REPLACE_WITH_YOUR_D1_ID", "migrations_dir": "migrations" }
   ],
-  "r2_buckets": [
-    { "binding": "IMAGES", "bucket_name": "artisan-kitchen-images" }
+  "kv_namespaces": [
+    { "binding": "IMAGES", "id": "REPLACE_WITH_YOUR_KV_ID" }
   ],
   "vars": {
-    "APP_NAME": "Artisan Kitchen",
-    "PUBLIC_ORIGIN": "https://artisan-kitchen.YOUR-SUBDOMAIN.workers.dev"
+    "APP_NAME": "Artisan Kitchen"
   },
   "observability": { "enabled": true }
 }

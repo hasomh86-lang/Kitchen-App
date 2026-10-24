@@ -65,6 +65,17 @@ const STRINGS = {
   'menu.updated': { en: 'Menu updated', ar: 'تم تحديث القائمة' },
   'menu.extra': { en: 'Good to know', ar: 'معلومة تهمك' },
   'menu.disclaimerOk': { en: 'I understand', ar: 'تمام، فهمت' },
+  'menu.filters': { en: 'Nutrition limits', ar: 'حدود القيم الغذائية' },
+  'menu.clearFilters': { en: 'Clear', ar: 'مسح' },
+  'menu.view': { en: 'View', ar: 'طريقة العرض' },
+  'menu.viewGrid': { en: 'Cards', ar: 'بطاقات' },
+  'menu.viewCompact': { en: 'Compact', ar: 'مضغوط' },
+  'menu.viewList': { en: 'List', ar: 'قائمة' },
+  'menu.theme': { en: 'Visual identity', ar: 'الهوية البصرية' },
+  'menu.themeReset': { en: 'Use menu default', ar: 'الافتراضي' },
+  'menu.quick': { en: 'Menus', ar: 'القوائم' },
+  'menu.under': { en: '<', ar: 'أقل من' },
+  'menu.over': { en: '>', ar: 'أكثر من' },
 
   // device gate
   'gate.title': { en: 'Device access', ar: 'الدخول من جهاز مسجّل' },

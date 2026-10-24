@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "concurrently -k -n web,api -c cyan,yellow \"vite\" \"wrangler dev --port 8787\"",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "npm run build && node scripts/cf-deploy.mjs",
     "db:migrate:local": "wrangler d1 migrations apply artisan-kitchen --local",
     "db:migrate": "wrangler d1 migrations apply artisan-kitchen --remote",
     "db:seed:local": "wrangler d1 execute artisan-kitchen --local --file=./seed/seed.sql",
     "db:seed": "wrangler d1 execute artisan-kitchen --remote --file=./seed/seed.sql",
     "import": "node scripts/import-supabase.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit",
+    "cf:deploy": "node scripts/cf-deploy.mjs"
   },
   "dependencies": {
     "@fontsource/amiri": "^5.3.0",
