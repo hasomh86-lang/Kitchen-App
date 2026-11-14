@@ -44,8 +44,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, onCancel }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/40 backdrop-blur-xl animate-fade-in">
-      <div className="w-full max-w-md bg-white rounded-[2rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border border-white/50 overflow-hidden relative animate-scale-in">
+    <div className="fixed inset-0 z-60 flex items-center justify-center p-6 bg-black/40 backdrop-blur-xl animate-fade-in">
+      <div className="w-full max-w-md bg-white rounded-4xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border border-white/50 overflow-hidden relative animate-scale-in">
         <button 
           onClick={onCancel}
           className="absolute top-6 right-6 p-2 text-gray-400 hover:text-black transition-colors rounded-full hover:bg-gray-100"
@@ -82,7 +82,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, onCancel }) => {
                     type="text" 
                     required
                     placeholder="First Name"
-                    className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
+                    className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-hidden focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -93,7 +93,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, onCancel }) => {
                     type="text" 
                     required
                     placeholder="Last Name"
-                    className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
+                    className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-hidden focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
@@ -107,7 +107,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, onCancel }) => {
                 type="email" 
                 required
                 placeholder="Chef Email"
-                className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
+                className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-hidden focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -119,7 +119,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, onCancel }) => {
                 type="password" 
                 required
                 placeholder="Secret Key"
-                className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-none focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
+                className="w-full bg-gray-50 border border-gray-100 py-4 pl-12 pr-4 rounded-2xl text-sm outline-hidden focus:ring-4 focus:ring-black/5 focus:border-black/10 transition-all font-medium"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />

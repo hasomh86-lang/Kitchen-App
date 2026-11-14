@@ -41,9 +41,9 @@ export const ThemeWrapper: React.FC<ThemeWrapperProps> = ({ theme, children, cla
 
 export const getThemeButtonClass = (theme: ThemeType) => {
     switch (theme) {
-        case 'modern': return 'bg-slate-900 text-white hover:bg-slate-800 rounded-xl px-6 py-2 transition-all shadow-sm';
+        case 'modern': return 'bg-slate-900 text-white hover:bg-slate-800 rounded-xl px-6 py-2 transition-all shadow-xs';
         case 'classic': return 'bg-[#2C2C2C] text-white hover:bg-black border border-[#2C2C2C] px-6 py-2 italic transition-all';
-        case 'dark': return 'bg-white text-black hover:bg-zinc-200 rounded-xl px-6 py-2 transition-all shadow-sm';
+        case 'dark': return 'bg-white text-black hover:bg-zinc-200 rounded-xl px-6 py-2 transition-all shadow-xs';
         default: return 'bg-blue-600 text-white hover:bg-blue-700 rounded-lg';
     }
 }

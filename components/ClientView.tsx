@@ -117,7 +117,7 @@ const DishCard: React.FC<DishCardProps> = ({ dish, isClassic, onImageClick, onAd
         className="relative overflow-hidden cursor-zoom-in group/img bg-gray-100 dark:bg-zinc-800 theme-transition"
         onClick={() => onImageClick(dish.image)}
       >
-        <div className="absolute top-8 left-8 z-20 w-12 h-12 flex items-center justify-center bg-gray-400/20 dark:bg-black/40 backdrop-blur-md text-gray-500 dark:text-zinc-300 text-xs font-black rounded-full border border-white/20 dark:border-white/10 shadow-sm transition-transform duration-700 select-none tracking-widest">
+        <div className="absolute top-8 left-8 z-20 w-12 h-12 flex items-center justify-center bg-gray-400/20 dark:bg-black/40 backdrop-blur-md text-gray-500 dark:text-zinc-300 text-xs font-black rounded-full border border-white/20 dark:border-white/10 shadow-xs transition-transform duration-700 select-none tracking-widest">
           {(index + 1).toString().padStart(2, '0')}
         </div>
 
@@ -132,7 +132,7 @@ const DishCard: React.FC<DishCardProps> = ({ dish, isClassic, onImageClick, onAd
 
       <div className="p-10 flex-1 flex flex-col items-center text-center">
         <div className="mb-8 w-full flex flex-col items-center">
-          <h3 className={`text-4xl font-black tracking-tighter text-[#1A1A1A] dark:text-zinc-100 mb-6 leading-tight ${isClassic ? 'font-serif italic' : ''} theme-transition`}>
+          <h3 className={`text-4xl font-black tracking-tighter text-darkcard dark:text-zinc-100 mb-6 leading-tight ${isClassic ? 'font-serif italic' : ''} theme-transition`}>
             {dish.name}
           </h3>
           
@@ -140,7 +140,7 @@ const DishCard: React.FC<DishCardProps> = ({ dish, isClassic, onImageClick, onAd
             {allComponents.map((item, idx) => (
               <span 
                 key={idx} 
-                className="px-3 py-1.5 bg-gray-50/80 dark:bg-white/5 border border-gray-100/50 dark:border-white/5 rounded-full text-[8px] font-black uppercase tracking-[0.15em] text-gray-400 dark:text-zinc-500 whitespace-nowrap shadow-sm hover:bg-white dark:hover:bg-white/10 hover:shadow-md hover:border-gray-200 transition-all duration-700 theme-transition"
+                className="px-3 py-1.5 bg-gray-50/80 dark:bg-white/5 border border-gray-100/50 dark:border-white/5 rounded-full text-[8px] font-black uppercase tracking-[0.15em] text-gray-400 dark:text-zinc-500 whitespace-nowrap shadow-xs hover:bg-white dark:hover:bg-white/10 hover:shadow-md hover:border-gray-200 transition-all duration-700 theme-transition"
               >
                 {item}
               </span>
@@ -198,7 +198,7 @@ const DishCard: React.FC<DishCardProps> = ({ dish, isClassic, onImageClick, onAd
 
 const Lightbox = ({ src, onClose }: { src: string; onClose: () => void }) => (
   <div 
-    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 cursor-zoom-out animate-fade-in p-6 md:p-20"
+    className="fixed inset-0 z-100 flex items-center justify-center bg-black/95 cursor-zoom-out animate-fade-in p-6 md:p-20"
     onClick={onClose}
   >
     <button 
@@ -237,9 +237,9 @@ const BasketDrawer: React.FC<BasketDrawerProps> = ({
   submitOrder, tableNumber, setTableNumber, guestName, setGuestName,
   totalItems, totalCalories
 }) => (
-  <div className={`fixed inset-0 z-[100] transition-all duration-700 ${isOpen ? 'visible' : 'invisible'}`}>
+  <div className={`fixed inset-0 z-100 transition-all duration-700 ${isOpen ? 'visible' : 'invisible'}`}>
     <div 
-      className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+      className={`absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
       onClick={onClose}
     />
     <div className={`absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-zinc-950 shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
@@ -327,7 +327,7 @@ const BasketDrawer: React.FC<BasketDrawerProps> = ({
                     placeholder="e.g. 12"
                     value={tableNumber}
                     onChange={(e) => setTableNumber(e.target.value)}
-                    className="w-full bg-white dark:bg-white/5 border-none p-3 rounded-xl text-xs font-bold focus:ring-2 focus:ring-black/10 outline-none dark:text-white"
+                    className="w-full bg-white dark:bg-white/5 border-none p-3 rounded-xl text-xs font-bold focus:ring-2 focus:ring-black/10 outline-hidden dark:text-white"
                   />
                 </div>
                 <div>
@@ -337,7 +337,7 @@ const BasketDrawer: React.FC<BasketDrawerProps> = ({
                     placeholder="Optional"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    className="w-full bg-white dark:bg-white/5 border-none p-3 rounded-xl text-xs font-bold focus:ring-2 focus:ring-black/10 outline-none dark:text-white"
+                    className="w-full bg-white dark:bg-white/5 border-none p-3 rounded-xl text-xs font-bold focus:ring-2 focus:ring-black/10 outline-hidden dark:text-white"
                   />
                 </div>
               </div>
@@ -471,7 +471,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
         {isOrderingEnabled && (
           <button 
             onClick={() => setIsBasketOpen(true)}
-            className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
+            className="fixed bottom-8 right-8 z-60 w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
           >
             <ShoppingBasket size={24} />
             {totalItems > 0 && (
@@ -487,7 +487,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
               <h1 className="text-5xl md:text-7xl font-extralight tracking-tight text-slate-400 dark:text-zinc-600 mb-1 leading-none uppercase theme-transition">
                 {appTitle}
               </h1>
-              <div className="text-6xl md:text-8xl text-[#B08D57] dark:text-zinc-400 italic font-['Playfair_Display'] font-normal leading-none -mt-4 md:-mt-6 ml-1 drop-shadow-sm theme-transition">
+              <div className="text-6xl md:text-8xl text-[#B08D57] dark:text-zinc-400 italic font-['Playfair_Display'] font-normal leading-none -mt-4 md:-mt-6 ml-1 drop-shadow-xs theme-transition">
                 Selection
               </div>
             </div>
@@ -538,7 +538,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
                         }}
                         className={`group cursor-pointer relative rounded-[3.5rem] overflow-hidden bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.06)] transition-all duration-700 flex flex-col h-[550px] theme-transition ${isActive ? 'hover:translate-y-[-8px] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)]' : ''}`}
                       >
-                        <div className="w-full aspect-[4/3] overflow-hidden">
+                        <div className="w-full aspect-4/3 overflow-hidden">
                           <ImageWithFallback src={category.image} alt={category.name} className="group-hover:scale-110 transition-transform duration-[3s] ease-out" />
                         </div>
 
@@ -591,8 +591,8 @@ export const ClientView: React.FC<ClientViewProps> = ({
                 <div className={`grid grid-cols-1 ${promotedDishes.length > 1 ? 'lg:grid-cols-2' : ''} gap-10`}>
                     {promotedDishes.map((dish, pIdx) => (
                         <div key={dish.id} className="relative group/promo">
-                            <div className="bg-white dark:bg-zinc-900 rounded-[2rem] overflow-hidden flex flex-col shadow-[0_30px_80px_-20px_rgba(0,0,0,0.08)] border border-gray-100/50 dark:border-white/5 transition-all duration-700 theme-transition h-full">
-                                <div className="overflow-hidden bg-gray-50 dark:bg-black/20 relative theme-transition aspect-[16/9]">
+                            <div className="bg-white dark:bg-zinc-900 rounded-4xl overflow-hidden flex flex-col shadow-[0_30px_80px_-20px_rgba(0,0,0,0.08)] border border-gray-100/50 dark:border-white/5 transition-all duration-700 theme-transition h-full">
+                                <div className="overflow-hidden bg-gray-50 dark:bg-black/20 relative theme-transition aspect-video">
                                     <div 
                                       className="w-full h-full cursor-zoom-in relative overflow-hidden group"
                                       onClick={() => setZoomedImage(dish.image)}
@@ -602,7 +602,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
                                             alt={dish.name} 
                                             className="w-full h-full object-cover transition-transform duration-[6s] group-hover:scale-105 ease-out" 
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                                     </div>
                                 </div>
 
@@ -625,7 +625,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
                                         {isNutritionVisible && (
                                             <div className="flex flex-col gap-3">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <div className="p-1 bg-[#B08D57]/10 rounded">
+                                                    <div className="p-1 bg-[#B08D57]/10 rounded-sm">
                                                         <Activity size={12} className="text-[#B08D57]" />
                                                     </div>
                                                     <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-300 dark:text-zinc-600 theme-transition">Composition</span>
@@ -725,7 +725,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
       {isOrderingEnabled && (
         <button 
           onClick={() => setIsBasketOpen(true)}
-          className="fixed bottom-8 right-8 z-[60] w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
+          className="fixed bottom-8 right-8 z-60 w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
         >
           <ShoppingBasket size={24} />
           {totalItems > 0 && (
@@ -742,7 +742,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
             onClick={() => setViewState((p: any) => ({...p, view: 'menu-overview'}))} 
             className="flex items-center gap-5 group"
           >
-            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 dark:bg-white/5 rounded-full group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all duration-700 shadow-sm border border-transparent dark:border-white/10 theme-transition">
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 dark:bg-white/5 rounded-full group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black transition-all duration-700 shadow-xs border border-transparent dark:border-white/10 theme-transition">
               <Home size={22} />
             </div>
             <div className="hidden md:block text-left">
@@ -786,7 +786,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
 
         {currentCategoryDishes.length === 0 && (
           <div className="h-[60vh] flex flex-col items-center justify-center text-center animate-fade-in">
-             <div className="p-10 bg-white/80 dark:bg-zinc-900 shadow-xl rounded-[3rem] mb-10 border border-gray-100 dark:border-white/5 backdrop-blur theme-transition">
+             <div className="p-10 bg-white/80 dark:bg-zinc-900 shadow-xl rounded-[3rem] mb-10 border border-gray-100 dark:border-white/5 backdrop-blur-sm theme-transition">
                 <Feather size={56} className="text-gray-200 dark:text-zinc-700 theme-transition" />
              </div>
              <h3 className="text-3xl font-black mb-4 tracking-tight dark:text-white theme-transition">Curation in Progress</h3>
@@ -816,7 +816,7 @@ export const PDFExportView: React.FC<{ dishes: Dish[], categories: CuisineCatego
             {dishes.map((dish, dishIdx) => (
                 <div key={dish.id} className="w-full h-screen flex break-after-page page-break-always overflow-hidden bg-white" style={{ pageBreakAfter: 'always' }}>
                      <div className="w-1/2 h-full relative p-20 flex items-center justify-center">
-                         <div className="responsive-image rounded-[4rem] overflow-hidden shadow-2xl border-[12px] border-gray-50 bg-gray-50">
+                         <div className="responsive-image rounded-[4rem] overflow-hidden shadow-2xl border-12 border-gray-50 bg-gray-50">
                             <img src={dish.image} alt={dish.name} />
                          </div>
                      </div>

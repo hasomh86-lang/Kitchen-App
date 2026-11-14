@@ -283,7 +283,7 @@ const App: React.FC = () => {
 
         {/* Global Settings Panel Trigger - Positioned fixed over all views */}
         {(viewState === 'menu-overview' || viewState === 'dish-viewer') && (
-            <div className="fixed top-6 right-6 z-[60] print:hidden">
+            <div className="fixed top-6 right-6 z-60 print:hidden">
                 <button
                     onClick={toggleSettings}
                     className={`p-4 rounded-full shadow-2xl hover:scale-110 transition-all flex items-center justify-center ${isSettingsOpen ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-white text-black dark:bg-zinc-800 dark:text-white'}`}
@@ -295,7 +295,7 @@ const App: React.FC = () => {
 
         {/* Branding & Settings Panel */}
         {isSettingsOpen && (
-            <div className="fixed top-24 right-6 z-[70] w-80 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl p-8 rounded-[2rem] shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border border-white/50 dark:border-white/5 animate-scale-in origin-top-right print:hidden max-h-[85vh] overflow-y-auto no-scrollbar">
+            <div className="fixed top-24 right-6 z-70 w-80 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl p-8 rounded-4xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border border-white/50 dark:border-white/5 animate-scale-in origin-top-right print:hidden max-h-[85vh] overflow-y-auto no-scrollbar">
                 <div className="space-y-8">
                     {/* Theme Selector */}
                     <div>

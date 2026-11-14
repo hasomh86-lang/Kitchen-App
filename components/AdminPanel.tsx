@@ -46,7 +46,7 @@ const SCENE_PRESETS = [
     { id: 'marble', name: 'White Marble', prompt: 'premium white marble table top, luxury dining, bright' },
     { id: 'onyx', name: 'White Onyx', prompt: 'translucent white onyx stone surface, elegant, backlit, soft texture' },
     { id: 'light-wood', name: 'Nordic Wood', prompt: 'light oak wood surface, natural texture, scandinavian style, soft shadows' },
-    { id: 'wood-rings', name: 'Wood Rings', prompt: 'artistic light wood surface with natural ring patterns, top down' },
+    { id: 'wood-rings', name: 'Wood Rings', prompt: 'artistic light wood surface with natural ring-3 patterns, top down' },
     { id: 'rustic', name: 'Rustic Table', prompt: 'dark rustic wooden table, moody dramatic lighting, rich texture' },
     { id: 'burnt', name: 'Burnt Wood', prompt: 'charred shou sugi ban wood texture, black and brown rings, artistic, dark' },
     { id: 'concrete', name: 'Concrete', prompt: 'industrial grey concrete surface, modern minimalism, raw texture' },
@@ -444,7 +444,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Name</label>
                 <input 
                     type="text" 
-                    className="w-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 p-3 rounded-lg focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 focus:outline-none transition-all dark:text-white" 
+                    className="w-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 p-3 rounded-lg focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 focus:outline-hidden transition-all dark:text-white" 
                     value={editingCategory?.name || ''} 
                     onChange={e => setEditingCategory(p => ({...p, name: e.target.value}))}
                 />
@@ -452,7 +452,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <div>
                 <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Description</label>
                 <textarea 
-                    className="w-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 p-3 rounded-lg focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 focus:outline-none transition-all dark:text-white h-24" 
+                    className="w-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 p-3 rounded-lg focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 focus:outline-hidden transition-all dark:text-white h-24" 
                     value={editingCategory?.description || ''} 
                     onChange={e => setEditingCategory(p => ({...p, description: e.target.value}))}
                 />
@@ -464,7 +464,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     {editingCategory?.image ? (
                         <div className="responsive-image bg-gray-50 rounded-xl overflow-hidden">
                             <img src={editingCategory.image} alt={editingCategory.name} />
-                            <button onClick={() => setEditingCategory(p => ({...p, image: undefined}))} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition-opacity z-10"><X size={12}/></button>
+                            <button onClick={() => setEditingCategory(p => ({...p, image: undefined}))} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-sm hover:bg-red-600 transition-opacity z-10"><X size={12}/></button>
                         </div>
                     ) : (
                         <div className="w-full aspect-video bg-gray-100 dark:bg-white/5 rounded-xl flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 dark:border-white/10">
@@ -533,7 +533,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         </button>
                     )}
 
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-xs">
                         <label className="cursor-pointer text-white flex flex-col items-center hover:scale-110 transition-transform">
                             <Upload className="w-10 h-10 mb-2" />
                             <span className="font-medium">Upload New</span>
@@ -559,10 +559,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                          </h4>
                          
                          <div className="grid grid-cols-2 gap-3 mb-6">
-                             <button onClick={() => handleAIImageEnhance('lighting')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-sm">Improve Lighting</button>
-                             <button onClick={() => handleAIImageEnhance('color')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-sm">Enhance Colors</button>
-                             <button onClick={() => handleAIImageEnhance('upscale')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-sm flex items-center justify-center gap-2"><Maximize size={12}/> Upscale AI</button>
-                             <button onClick={() => handleAIImageEnhance('remove-bg')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-sm">Remove Background</button>
+                             <button onClick={() => handleAIImageEnhance('lighting')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-xs">Improve Lighting</button>
+                             <button onClick={() => handleAIImageEnhance('color')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-xs">Enhance Colors</button>
+                             <button onClick={() => handleAIImageEnhance('upscale')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-xs flex items-center justify-center gap-2"><Maximize size={12}/> Upscale AI</button>
+                             <button onClick={() => handleAIImageEnhance('remove-bg')} className="text-xs font-medium bg-white dark:bg-zinc-800 text-blue-900 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 p-3 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white hover:border-transparent transition-all shadow-xs">Remove Background</button>
                          </div>
                          <div className="border-t border-blue-200/50 dark:border-blue-900/20 pt-4">
                              <label className="text-xs font-bold text-blue-900 dark:text-blue-400 block mb-3 uppercase tracking-wide">Scene Generation</label>
@@ -632,28 +632,28 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     )}
                  </div>
 
-                 <div className="border border-gray-100 dark:border-white/5 p-6 rounded-2xl bg-white dark:bg-white/5 shadow-sm">
+                 <div className="border border-gray-100 dark:border-white/5 p-6 rounded-2xl bg-white dark:bg-white/5 shadow-xs">
                      <h5 className="font-bold mb-4 text-sm uppercase tracking-wide text-gray-400 dark:text-gray-500">Nutrition Profile</h5>
                      <div className="grid grid-cols-2 gap-4">
                          <div className="bg-orange-50 dark:bg-orange-950/20 p-3 rounded-lg border border-orange-100 dark:border-orange-900/30 col-span-2">
                             <label className="text-xs text-orange-600 dark:text-orange-400 font-bold block mb-1">Calories (kcal)</label>
-                            <input type="number" className="w-full bg-transparent font-mono font-bold text-xl outline-none text-orange-900 dark:text-orange-200" value={editingDish?.nutrition?.calories || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, calories: parseInt(e.target.value) || 0}}))} />
+                            <input type="number" className="w-full bg-transparent font-mono font-bold text-xl outline-hidden text-orange-900 dark:text-orange-200" value={editingDish?.nutrition?.calories || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, calories: parseInt(e.target.value) || 0}}))} />
                          </div>
                          <div className="bg-gray-50 dark:bg-white/5 p-3 rounded-lg border border-gray-100 dark:border-white/5">
                             <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Protein (g)</label>
-                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-none dark:text-white" value={editingDish?.nutrition?.protein || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, protein: parseInt(e.target.value) || 0}}))} />
+                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-hidden dark:text-white" value={editingDish?.nutrition?.protein || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, protein: parseInt(e.target.value) || 0}}))} />
                          </div>
                          <div className="bg-gray-50 dark:bg-white/5 p-3 rounded-lg border border-gray-100 dark:border-white/5">
                             <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Fat (g)</label>
-                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-none dark:text-white" value={editingDish?.nutrition?.fat || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, fat: parseInt(e.target.value) || 0}}))} />
+                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-hidden dark:text-white" value={editingDish?.nutrition?.fat || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, fat: parseInt(e.target.value) || 0}}))} />
                          </div>
                          <div className="bg-gray-50 dark:bg-white/5 p-3 rounded-lg border border-gray-100 dark:border-white/5">
                             <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Carbs (g)</label>
-                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-none dark:text-white" value={editingDish?.nutrition?.carbohydrates || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, carbohydrates: parseInt(e.target.value) || 0}}))} />
+                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-hidden dark:text-white" value={editingDish?.nutrition?.carbohydrates || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, carbohydrates: parseInt(e.target.value) || 0}}))} />
                          </div>
                          <div className="bg-gray-50 dark:bg-white/5 p-3 rounded-lg border border-gray-100 dark:border-white/5">
                             <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Fiber (g)</label>
-                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-none dark:text-white" value={editingDish?.nutrition?.fiber || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, fiber: parseInt(e.target.value) || 0}}))} />
+                            <input type="number" className="w-full bg-transparent font-mono text-lg outline-hidden dark:text-white" value={editingDish?.nutrition?.fiber || 0} onChange={e => setEditingDish(p => ({...p, nutrition: {...p.nutrition!, fiber: parseInt(e.target.value) || 0}}))} />
                          </div>
                      </div>
                  </div>
@@ -690,8 +690,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 bg-black/5 dark:bg-black/40 z-50 overflow-y-auto backdrop-blur-sm animate-fade-in">
-        <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-white/20 dark:border-white/5 px-10 py-6 flex justify-between items-center sticky top-0 z-20 shadow-sm">
+    <div className="fixed inset-0 bg-black/5 dark:bg-black/40 z-50 overflow-y-auto backdrop-blur-xs animate-fade-in">
+        <div className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-white/20 dark:border-white/5 px-10 py-6 flex justify-between items-center sticky top-0 z-20 shadow-xs">
             <div className="flex items-center gap-3">
                  <div className={`w-3 h-3 rounded-full ${isSyncing ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`}></div>
                  <h1 className="text-xl font-bold tracking-tight dark:text-white">Chef Dashboard</h1>
@@ -764,7 +764,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                     orders.map((order) => (
                                         <div 
                                             key={order.id} 
-                                            className={`bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-sm border transition-all overflow-hidden ${
+                                            className={`bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-xs border transition-all overflow-hidden ${
                                                 order.status === 'pending' ? 'border-amber-100 dark:border-amber-900/30' : 'border-gray-100 dark:border-white/5'
                                             }`}
                                         >
@@ -841,7 +841,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                                             {order.items.map((item, idx) => (
                                                                 <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl group transition-all hover:bg-gray-100 dark:hover:bg-white/10">
                                                                     <div className="flex items-center gap-5">
-                                                                        <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm">
+                                                                        <div className="w-12 h-12 rounded-xl overflow-hidden shadow-xs">
                                                                             <img src={item.dish.image} alt={item.dish.name} className="w-full h-full object-cover" />
                                                                         </div>
                                                                         <div>
@@ -867,7 +867,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                                         </div>
                                                     </div>
 
-                                                    <div className="bg-gray-50 dark:bg-white/5 p-8 rounded-[2rem] h-fit">
+                                                    <div className="bg-gray-50 dark:bg-white/5 p-8 rounded-4xl h-fit">
                                                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">Order Summary</h4>
                                                         <div className="space-y-4">
                                                             <div className="flex justify-between items-center">
@@ -899,7 +899,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     ) : activeTab === 'settings' ? (
                         <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
                             {/* Brand Details Section */}
-                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-sm">
+                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xs">
                                 <div className="flex items-center gap-3 mb-8">
                                     <Info size={24} className="text-black dark:text-white" />
                                     <h3 className="text-xl font-bold dark:text-white">Brand Identity</h3>
@@ -913,7 +913,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                                 type="text" 
                                                 value={appTitle} 
                                                 onChange={e => setAppTitle(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-bold focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-none dark:text-white"
+                                                className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-bold focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-hidden dark:text-white"
                                             />
                                         </div>
                                         <div>
@@ -922,7 +922,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                                 type="text" 
                                                 value={promotionTitle} 
                                                 onChange={e => setPromotionTitle(e.target.value)}
-                                                className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-none dark:text-white"
+                                                className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-hidden dark:text-white"
                                             />
                                         </div>
                                     </div>
@@ -932,7 +932,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                             type="text" 
                                             value={appSubtitle} 
                                             onChange={e => setAppSubtitle(e.target.value)}
-                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-none dark:text-white"
+                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-hidden dark:text-white"
                                         />
                                     </div>
                                     <div>
@@ -941,7 +941,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                             type="text" 
                                             value={philosophyTitle} 
                                             onChange={e => setPhilosophyTitle(e.target.value)}
-                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-none dark:text-white"
+                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-medium focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-hidden dark:text-white"
                                         />
                                     </div>
                                     <div>
@@ -949,13 +949,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                         <textarea 
                                             value={philosophyDescription} 
                                             onChange={e => setPhilosophyDescription(e.target.value)}
-                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-light focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-none dark:text-white h-24 resize-none"
+                                            className="w-full bg-gray-50 dark:bg-white/5 border-none p-4 rounded-xl text-sm font-light focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 outline-hidden dark:text-white h-24 resize-none"
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-sm">
+                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xs">
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
                                         <h3 className="text-lg font-bold dark:text-white">Enable Basket & Ordering</h3>
@@ -963,20 +963,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                     </div>
                                     <button 
                                         onClick={() => setIsOrderingEnabled(!isOrderingEnabled)}
-                                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none ${isOrderingEnabled ? 'bg-green-500' : 'bg-gray-300 dark:bg-zinc-700'}`}
+                                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-hidden ${isOrderingEnabled ? 'bg-green-500' : 'bg-gray-300 dark:bg-zinc-700'}`}
                                     >
                                         <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${isOrderingEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
                                     </button>
                                 </div>
                                 <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-100 dark:border-amber-900/30 flex items-start gap-3">
-                                    <Zap size={18} className="text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                                    <Zap size={18} className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                                     <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
                                         <strong>Note:</strong> This is a global setting. Switching this OFF will immediately hide the basket, checkout, and all ordering buttons from all connected devices in real-time.
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-sm">
+                            <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-gray-200 dark:border-white/5 shadow-xs">
                                 <div className="flex items-center justify-between">
                                     <div className="space-y-1">
                                         <h3 className="text-lg font-bold dark:text-white">Display Nutrition Facts</h3>
@@ -984,13 +984,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                     </div>
                                     <button 
                                         onClick={() => setIsNutritionVisible(!isNutritionVisible)}
-                                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none ${isNutritionVisible ? 'bg-green-500' : 'bg-gray-300 dark:bg-zinc-700'}`}
+                                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-hidden ${isNutritionVisible ? 'bg-green-500' : 'bg-gray-300 dark:bg-zinc-700'}`}
                                     >
                                         <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${isNutritionVisible ? 'translate-x-7' : 'translate-x-1'}`} />
                                     </button>
                                 </div>
                                 <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-xl border border-blue-100 dark:border-blue-900/30 flex items-start gap-3">
-                                    <Info size={18} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                                    <Info size={18} className="text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
                                     <p className="text-xs text-blue-800 dark:text-blue-300 leading-relaxed">
                                         <strong>Control:</strong> Hiding nutrition facts will remove the composition breakdown from dish cards but keep your data safely stored in the dashboard.
                                     </p>
@@ -1013,13 +1013,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                     onDragStart={(e) => handleCategoryDragStart(e, cat.id)}
                                     onDragOver={handleCategoryDragOver}
                                     onDrop={(e) => handleCategoryDrop(e, cat.id)}
-                                    className={`bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group relative animate-slide-up cursor-move ${cat.isHidden ? 'opacity-75' : ''}`} 
+                                    className={`bg-white dark:bg-zinc-900 rounded-2xl shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden group relative animate-slide-up cursor-move ${cat.isHidden ? 'opacity-75' : ''}`} 
                                     style={{animationDelay: `${i*100}ms`}}
                                 >
                                     <div className="responsive-image bg-gray-50">
                                         <img src={cat.image} alt={cat.name} className={`transform group-hover:scale-110 transition-transform duration-700 ${cat.isHidden ? 'grayscale' : ''}`} />
                                         {cat.isHidden && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-[5]">
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/10 backdrop-blur-[1px] z-5">
                                                  <span className="bg-black/70 text-white text-[10px] px-3 py-1 rounded-full uppercase font-black tracking-widest shadow-lg">Hidden From Menu</span>
                                             </div>
                                         )}
@@ -1066,14 +1066,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     ) : (
                         <div className="space-y-10 animate-slide-up">
                             <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
-                                <div className="bg-white dark:bg-zinc-900 p-1 rounded-xl shadow-sm border border-gray-200 dark:border-white/5 flex items-center">
+                                <div className="bg-white dark:bg-zinc-900 p-1 rounded-xl shadow-xs border border-gray-200 dark:border-white/5 flex items-center">
                                     <div className="px-3 py-2 border-r border-gray-100 dark:border-white/10 text-gray-400">
                                         <ArrowUpDown size={16} />
                                     </div>
                                     <select 
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value as any)}
-                                        className="bg-transparent py-2 pl-3 pr-8 text-sm font-medium text-gray-700 dark:text-zinc-300 outline-none cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 rounded-r-xl appearance-none"
+                                        className="bg-transparent py-2 pl-3 pr-8 text-sm font-medium text-gray-700 dark:text-zinc-300 outline-hidden cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 rounded-r-xl appearance-none"
                                         style={{backgroundImage: 'none'}}
                                     >
                                         <option value="default">Default Order</option>
@@ -1096,7 +1096,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                 return (
                                     <div 
                                         key={cat.id} 
-                                        className={`bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm p-6 rounded-3xl border transition-all duration-300 ${dragOverCategoryId === cat.id ? 'border-blue-400 bg-blue-50/50 scale-[1.01]' : 'border-gray-200 dark:border-white/5'}`}
+                                        className={`bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xs p-6 rounded-3xl border transition-all duration-300 ${dragOverCategoryId === cat.id ? 'border-blue-400 bg-blue-50/50 scale-[1.01]' : 'border-gray-200 dark:border-white/5'}`}
                                         onDragOver={(e) => handleDragOver(e, cat.id)}
                                         onDrop={(e) => handleDrop(e, cat.id)}
                                     >
@@ -1113,7 +1113,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                             {sortedDishes.map((dish, idx) => (
                                                 <div 
                                                     key={dish.id} 
-                                                    className={`bg-white dark:bg-zinc-800 rounded-2xl p-3 gap-3 shadow-sm hover:shadow-md transition-all group relative border border-transparent hover:border-gray-100 dark:hover:border-white/10 ${dish.isHidden ? 'opacity-50 grayscale' : ''}`}
+                                                    className={`bg-white dark:bg-zinc-800 rounded-2xl p-3 gap-3 shadow-xs hover:shadow-md transition-all group relative border border-transparent hover:border-gray-100 dark:hover:border-white/10 ${dish.isHidden ? 'opacity-50 grayscale' : ''}`}
                                                     draggable={sortBy === 'default'}
                                                     onDragStart={(e) => handleDragStart(e, dish.id)}
                                                     onDragEnd={handleDragEnd}
@@ -1121,8 +1121,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                                     onDrop={(e) => handleDishReorder(e, dish)}
                                                 >
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
-                                                            <img src={dish.image} className="w-full h-full object-contain shadow-sm" alt={dish.name} />
+                                                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 shrink-0">
+                                                            <img src={dish.image} className="w-full h-full object-contain shadow-xs" alt={dish.name} />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="font-bold truncate text-gray-800 dark:text-zinc-100">{dish.name}</div>

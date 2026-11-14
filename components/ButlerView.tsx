@@ -90,7 +90,7 @@ export const ButlerView: React.FC<ButlerViewProps> = ({ orders, setOrders, onClo
             orders.map((order) => (
               <div 
                 key={order.id} 
-                className={`bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-sm border transition-all overflow-hidden ${
+                className={`bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-xs border transition-all overflow-hidden ${
                   order.status === 'pending' ? 'border-amber-100 dark:border-amber-900/30' : 'border-gray-100 dark:border-white/5'
                 }`}
               >
@@ -156,7 +156,7 @@ export const ButlerView: React.FC<ButlerViewProps> = ({ orders, setOrders, onClo
                         {order.items.map((item, idx) => (
                           <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl group transition-all hover:bg-gray-100 dark:hover:bg-white/10">
                             <div className="flex items-center gap-5">
-                              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm">
+                              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-xs">
                                 <img src={item.dish.image} alt={item.dish.name} className="w-full h-full object-cover" />
                               </div>
                               <div>
@@ -182,7 +182,7 @@ export const ButlerView: React.FC<ButlerViewProps> = ({ orders, setOrders, onClo
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 dark:bg-white/5 p-8 rounded-[2rem] h-fit">
+                    <div className="bg-gray-50 dark:bg-white/5 p-8 rounded-4xl h-fit">
                       <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6">Order Summary</h4>
                       <div className="space-y-4">
                         <div className="flex justify-between items-center">
