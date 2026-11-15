@@ -92,6 +92,16 @@
       .animate-scale-in { animation: scaleIn 0.4s ease-out forwards; }
       .animate-float { animation: float 5s ease-in-out infinite; }
 
+      /* Beams background: slow breathing veil over the light beams */
+      @keyframes beamsVeil {
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 1; }
+      }
+      .beams-veil { animation: beamsVeil 10s ease-in-out infinite; }
+      @media (prefers-reduced-motion: reduce) {
+        .beams-veil { animation: none; }
+      }
+
       /* Background Styles */
       .bg-parchment {
         background-color: #FDFBF7;
